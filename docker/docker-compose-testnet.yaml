@@ -1,0 +1,92 @@
+version: '3'
+services:
+  node_david:
+    ports:
+      - "30333:30333"
+      - "9933:9933"
+      - "9944:9944"
+    image: kusama:0.9.5
+    volumes:
+      - ../chain-specs/kusama.json:/kusama.json
+    command: polkadot --chain=/kusama.json --base-path /tmp/node_david --validator --rpc-methods Unsafe --rpc-cors all --unsafe-ws-external --unsafe-rpc-external --name NodeDavid --node-key 0000000000000000000000000000000000000000000000000000000000000001
+    networks:
+      testing_net:
+        ipv4_address: 172.28.1.1
+
+  node_daniel:
+    image: kusama:0.9.5
+    volumes:
+      - ../chain-specs/kusama.json:/kusama.json
+    command: polkadot --chain=/kusama.json --base-path /tmp/node_daniel --validator --rpc-methods Unsafe --rpc-cors all --unsafe-ws-external --unsafe-rpc-external --name NodeDaniel --bootnodes '/ip4/172.28.1.1/tcp/30333/p2p/12D3KooWEyoppNCUx8Yx66oV9fJnriXwCcXwDDUA2kj6vnc6iDEp'  -ldebug
+    networks:
+      testing_net:
+        ipv4_address: 172.28.1.2
+
+  node_jack:
+    image: kusama:0.9.5
+    volumes:
+      - ../chain-specs/kusama.json:/kusama.json
+    command: polkadot --chain=/kusama.json --base-path /tmp/node_jack --validator --rpc-methods Unsafe --rpc-cors all --unsafe-ws-external --unsafe-rpc-external --name NodeJack --bootnodes '/ip4/172.28.1.1/tcp/30333/p2p/12D3KooWEyoppNCUx8Yx66oV9fJnriXwCcXwDDUA2kj6vnc6iDEp'
+    networks:
+      testing_net:
+        ipv4_address: 172.28.1.3
+
+  node_john:
+    image: kusama:0.9.5
+    volumes:
+      - ../chain-specs/kusama.json:/kusama.json
+    command: polkadot --chain=/kusama.json --base-path /tmp/node_john --validator --rpc-methods Unsafe --rpc-cors all --unsafe-ws-external --unsafe-rpc-external --name NodeJohn --bootnodes '/ip4/172.28.1.1/tcp/30333/p2p/12D3KooWEyoppNCUx8Yx66oV9fJnriXwCcXwDDUA2kj6vnc6iDEp'
+    networks:
+      testing_net:
+        ipv4_address: 172.28.1.4
+
+  node_judy:
+    image: kusama:0.9.5
+    volumes:
+      - ../chain-specs/kusama.json:/kusama.json
+    command: polkadot --chain=/kusama.json --base-path /tmp/node_judy --validator --rpc-methods Unsafe --rpc-cors all --unsafe-ws-external --unsafe-rpc-external --name NodeJudy --bootnodes '/ip4/172.28.1.1/tcp/30333/p2p/12D3KooWEyoppNCUx8Yx66oV9fJnriXwCcXwDDUA2kj6vnc6iDEp'
+    networks:
+      testing_net:
+        ipv4_address: 172.28.1.5
+
+  node_max:
+    image: kusama:0.9.5
+    volumes:
+      - ../chain-specs/kusama.json:/kusama.json
+    command: polkadot --chain=/kusama.json --base-path /tmp/node_max --validator --rpc-methods Unsafe --rpc-cors all --unsafe-ws-external --unsafe-rpc-external --name NodeMax --bootnodes '/ip4/172.28.1.1/tcp/30333/p2p/12D3KooWEyoppNCUx8Yx66oV9fJnriXwCcXwDDUA2kj6vnc6iDEp'
+    networks:
+      testing_net:
+        ipv4_address: 172.28.1.6
+
+  para_daniel:
+    image: purestake/moonbeam:v0.11.2
+    depends_on:
+      - node_daniel
+    volumes:
+      - ../chain-specs/kusama.json:/kusama.json
+      - ../chain-specs/moonbeam.json:/moonbeam.json
+    command: --collator --log debug --chain ./moonbeam.json --base-path /tmp/para_daniel --name "CollatorDaniel" --force-authoring --parachain-id 2000 --rpc-cors all --rpc-methods Unsafe --unsafe-ws-external --unsafe-rpc-external --node-key 0000000000000000000000000000000000000000000000000000000000000001 -- --execution wasm --chain /kusama.json
+    networks:
+      testing_net:
+        ipv4_address: 172.28.2.1
+
+  para_david:
+    image: purestake/moonbeam:v0.11.2
+    depends_on:
+      - node_david
+    volumes:
+      - ../chain-specs/kusama.json:/kusama.json
+      - ../chain-specs/moonbeam.json:/moonbeam.json
+    command: --collator --chain ./moonbeam.json --base-path /tmp/para_david --name "CollatorDavid" --force-authoring --parachain-id 2000 --rpc-cors all --rpc-methods Unsafe --unsafe-ws-external --unsafe-rpc-external --bootnodes /ip4/172.28.2.1/tcp/30333/p2p/12D3KooWEyoppNCUx8Yx66oV9fJnriXwCcXwDDUA2kj6vnc6iDEp -- --execution wasm --chain /kusama.json --bootnodes /ip4/172.28.1.1/tcp/30333/p2p/12D3KooWEyoppNCUx8Yx66oV9fJnriXwCcXwDDUA2kj6vnc6iDEp
+    networks:
+      testing_net:
+        ipv4_address: 172.28.2.2
+
+networks:
+  testing_net:
+#    driver_opts:
+#      com.docker.network.bridge.host_binding_ipv4: 172.28.0.1
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.28.0.0/16

@@ -1,0 +1,13 @@
+version: '3'
+services:
+  moonbeam:
+    image: purestake/moonbeam:v0.11.2
+    command: --log debug --dev-service --alice --dev --base-path /tmp/para_alice --name "CollatorAlice" --force-authoring --parachain-id 2001 --rpc-cors all --rpc-methods Unsafe --unsafe-ws-external --unsafe-rpc-external --sealing 6000 --node-key 0000000000000000000000000000000000000000000000000000000000000001
+    networks:
+      docker_testing_net:
+        ipv4_address: 172.28.2.3
+
+networks:
+  docker_testing_net:
+    external: true
+    name: docker_testing_net

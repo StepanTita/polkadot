@@ -1,0 +1,66 @@
+version: '3'
+services:
+  node_david:
+    ports:
+      - "30333:30333"
+      - "9933:9933"
+      - "9944:9944"
+    image: chevdor/polkadot:latest
+    volumes:
+      - ../chain-specs/kusama-prod.json:/kusama.json
+    command: polkadot --chain=/kusama.json --base-path /tmp/node_david --validator --rpc-methods Unsafe --rpc-cors all --unsafe-ws-external --unsafe-rpc-external --name NodeDavid --node-key 0000000000000000000000000000000000000000000000000000000000000001
+    networks:
+      testing_net:
+        ipv4_address: 172.28.1.1
+
+  node_daniel:
+    image: chevdor/polkadot:latest
+    volumes:
+      - ../chain-specs/kusama-prod.json:/kusama.json
+    command: polkadot --chain=/kusama.json --base-path /tmp/node_daniel --validator --rpc-methods Unsafe --rpc-cors all --unsafe-ws-external --unsafe-rpc-external --name NodeDaniel --bootnodes '/ip4/172.28.1.1/tcp/30333/p2p/12D3KooWEyoppNCUx8Yx66oV9fJnriXwCcXwDDUA2kj6vnc6iDEp'  -ldebug
+    networks:
+      testing_net:
+        ipv4_address: 172.28.1.2
+
+  node_jack:
+    image: chevdor/polkadot:latest
+    volumes:
+      - ../chain-specs/kusama-prod.json:/kusama.json
+    command: polkadot --chain=/kusama.json --base-path /tmp/node_jack --validator --rpc-methods Unsafe --rpc-cors all --unsafe-ws-external --unsafe-rpc-external --name NodeJack --bootnodes '/ip4/172.28.1.1/tcp/30333/p2p/12D3KooWEyoppNCUx8Yx66oV9fJnriXwCcXwDDUA2kj6vnc6iDEp'
+    networks:
+      testing_net:
+        ipv4_address: 172.28.1.3
+
+  node_john:
+    image: chevdor/polkadot:latest
+    volumes:
+      - ../chain-specs/kusama-prod.json:/kusama.json
+    command: polkadot --chain=/kusama.json --base-path /tmp/node_john --validator --rpc-methods Unsafe --rpc-cors all --unsafe-ws-external --unsafe-rpc-external --name NodeJohn --bootnodes '/ip4/172.28.1.1/tcp/30333/p2p/12D3KooWEyoppNCUx8Yx66oV9fJnriXwCcXwDDUA2kj6vnc6iDEp'
+    networks:
+      testing_net:
+        ipv4_address: 172.28.1.4
+
+  node_judy:
+    image: chevdor/polkadot:latest
+    volumes:
+      - ../chain-specs/kusama-prod.json:/kusama.json
+    command: polkadot --chain=/kusama.json --base-path /tmp/node_judy --validator --rpc-methods Unsafe --rpc-cors all --unsafe-ws-external --unsafe-rpc-external --name NodeJudy --bootnodes '/ip4/172.28.1.1/tcp/30333/p2p/12D3KooWEyoppNCUx8Yx66oV9fJnriXwCcXwDDUA2kj6vnc6iDEp'
+    networks:
+      testing_net:
+        ipv4_address: 172.28.1.5
+
+  node_max:
+    image: chevdor/polkadot:latest
+    volumes:
+      - ../chain-specs/kusama-prod.json:/kusama.json
+    command: polkadot --chain=/kusama.json --base-path /tmp/node_max --validator --rpc-methods Unsafe --rpc-cors all --unsafe-ws-external --unsafe-rpc-external --name NodeMax --bootnodes '/ip4/172.28.1.1/tcp/30333/p2p/12D3KooWEyoppNCUx8Yx66oV9fJnriXwCcXwDDUA2kj6vnc6iDEp'
+    networks:
+      testing_net:
+        ipv4_address: 172.28.1.6
+
+networks:
+  testing_net:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.28.0.0/16
